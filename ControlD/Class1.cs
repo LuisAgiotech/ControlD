@@ -255,21 +255,27 @@ namespace ControlD
             int suma = 0;
             try
             {
-
                 byte[] Convertir = new byte[suma];
 
                 //Se ejecuta el Procedimiento Almacenado para insertar Datos
                 DR = DA.ExecuteSP("sp_image_image_getByRef", OrderID, References);
-                if (DR.HasRows)
+                if (DA._LastErrorMessage != "")
                 {
-                    while (DR.Read())
-                    {
-                            Convertir.SetValue(Convert.ToByte(DR.GetString(4)), 0);
-                            mst[suma] = new MemoryStream(Convertir);
-
-                    }
-                   // dat = Encoding.UTF8.GetString(Convertir);---------------Para nada xD
+                    throw new Exception(DA._LastErrorMessage);
                 }
+                    if (DR.HasRows)
+                    {
+                        while (DR.Read())
+                        {
+                            for (int i = 0; i < DR.VisibleFieldCount; i++)
+                            {
+                                mst[i] = new MemoryStream((byte[])DR[3]);
+                                i++;
+                            }
+                        }
+                        
+                    }
+                
             }
             catch (Exception e)
             {
@@ -280,79 +286,6 @@ namespace ControlD
             //return dat; ----------Para enviar texto
         }
 
-
     }// Fin de la clase ShowFile
-
-        /*
-    public class ShowFile
-    {
-
-        public SqlDataReader DR;
-        public String Database;
-        public String Pass;
-        public String Server;
-        public String User;
-
-        public static SqlConnection conn = new SqlConnection("Server=192.168.1.1; Database= AgioNet v1.3; User Id=aguser; Password=Agiotech01");
-
-        private String _ClassError;
-
-        //GET y SET de la variable error
-        public String ClassError
-        {
-            get { return _ClassError; }
-            set { _ClassError = value; }
-        }
-
-        //variable para dar acceso a la BD
-        public DataAccess.DataAccess DA;
-
-        public string GetExtension(string link)
-        {
-            string Resultado = link;
-            return link;
-        }
-
-        public ShowFile(String Pass, String Server, String User, String Database)
-        {
-            this.Pass = Pass;
-            this.Server = Server;
-            this.User = User;
-            this.Database = Database;
-
-            DA = new DataAccess.DataAccess(Server, Database, User, Pass);
-
-        }
-
-
-        public String GetFile(String OrderID, String References)
-        {
-
-            String dat = "no pasa valor";
-            try
-            {
-                //Se ejecuta el Procedimiento Almacenado para insertar Datos
-                DR = DA.ExecuteSP("sp_image_image_getByRef", OrderID, References);
-                if (DR.HasRows)
-                {
-                    while (DR.Read())
-                    {
-                        dat = DR.GetString(4);
-                        dat = DR.GetString(1);
-                        dat = DR.GetString(3);
-                        dat = DR.GetString(5);
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                dat = "fallaste";
-                _ClassError = e.Message;
-            }
-            return dat; 
-        }
-
-
-    }// Fin de la clase ShowFile*/
-
+    
 }
