@@ -61,10 +61,12 @@ namespace ConsoleApplication1
 
             ShowFile prueba4 = new ShowFile("Agiotech01", "192.168.1.1", "aguser", "AgioNet v1.3");
 
-            MemoryStream[] Convertir/*String vamos*/  = prueba4.GetFile("SA231001", "LoteRec");
-            //byte[] binario = Convertir.ToArray;
+            String vamos = prueba4.GetFile("SA231001", "LoteRec");
+            Console.WriteLine(vamos);
 
-            Console.WriteLine(Convertir[0]);
+            /*
+            MemoryStream[] Convertir = prueba4.GetFile("SA231001", "LoteRec");
+            Console.WriteLine(Convertir[0]);*/
 
             Console.WriteLine(prueba4.ClassError);
 
